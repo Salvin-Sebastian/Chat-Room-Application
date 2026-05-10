@@ -3,14 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://shilpamaryvarghese.github.io/Election-2026/chat-app",
+  "homepage": "https://Salvin-Sebastian.github.io/Chat-Room-Application/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist -e chat-app"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "firebase": "^12.13.0",
