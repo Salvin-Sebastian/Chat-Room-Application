@@ -78,7 +78,7 @@ This project is configured to be easily deployed to GitHub Pages.
    ```bash
    npm run deploy
    ```
-3. Your app will be built and pushed to the `gh-pages` branch, and will be accessible via your GitHub Pages URL (e.g., `https://shilpamaryvarghese.github.io/Election-2026/chat-app`).
+3. Your app will be built and pushed to the `gh-pages` branch, and will be accessible via your GitHub Pages URL.
 
 ---
 
