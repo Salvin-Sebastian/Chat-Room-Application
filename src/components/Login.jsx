@@ -41,8 +41,25 @@ export default function Login() {
         </div>
 
         {error && (
-          <div style={{ padding: '12px', background: 'rgba(239, 68, 68, 0.2)', color: 'var(--error)', borderRadius: '8px', fontSize: '0.9rem' }}>
-            {error}
+          <div style={{ padding: '12px', background: 'rgba(239, 68, 68, 0.2)', color: 'var(--error)', borderRadius: '8px', fontSize: '0.9rem', textAlign: 'left' }}>
+            <strong>Error:</strong> {error}
+            {error.includes('unauthorized-domain') && (
+              <div style={{ marginTop: '10px', fontSize: '0.85rem' }}>
+                <p><strong>How to fix this:</strong></p>
+                <ol style={{ paddingLeft: '20px', marginTop: '5px' }}>
+                  {window.location.hostname === '127.0.0.1' ? (
+                    <li>You are testing on <code>127.0.0.1</code>, which Firebase blocks. Please change your browser URL to <code>http://localhost:5173</code> instead!</li>
+                  ) : (
+                    <>
+                      <li>Go to the <a href="https://console.firebase.google.com/" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)' }}>Firebase Console</a>.</li>
+                      <li>Click Authentication {"->"} Settings {"->"} Authorized Domains.</li>
+                      <li>Click "Add domain" and add exactly: <strong><code>{window.location.hostname}</code></strong></li>
+                      <li>Wait 2 minutes and try again.</li>
+                    </>
+                  )}
+                </ol>
+              </div>
+            )}
           </div>
         )}
 
