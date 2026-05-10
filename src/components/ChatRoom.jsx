@@ -73,7 +73,8 @@ export default function ChatRoom({ user, room, onBack }) {
   };
 
   const handleCopyId = () => {
-    navigator.clipboard.writeText(room.id);
+    const inviteLink = `${window.location.origin}${window.location.pathname}?room=${room.id}`;
+    navigator.clipboard.writeText(inviteLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -91,8 +92,8 @@ export default function ChatRoom({ user, room, onBack }) {
               {room.isPrivate && <span style={{ fontSize: '0.65rem', background: 'rgba(239, 68, 68, 0.2)', color: 'var(--error)', padding: '2px 8px', borderRadius: '12px' }}>Private</span>}
             </div>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-sm" style={{ opacity: 0.8 }}>Room ID: <code style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 6px', borderRadius: '4px', userSelect: 'all' }}>{room.id}</code></span>
-              <button onClick={handleCopyId} title="Copy Room ID" className="btn-icon" style={{ width: '24px', height: '24px', padding: 0 }}>
+              <span className="text-sm" style={{ opacity: 0.8 }}>Invite Link: <code style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 6px', borderRadius: '4px', userSelect: 'all' }}>?room={room.id}</code></span>
+              <button onClick={handleCopyId} title="Copy Invite Link" className="btn-icon" style={{ width: '24px', height: '24px', padding: 0 }}>
                 {copied ? <Check size={14} color="var(--primary)" /> : <Copy size={14} />}
               </button>
             </div>

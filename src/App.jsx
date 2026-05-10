@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from './firebase';
+import { auth, getRoomRef } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { getDoc } from 'firebase/firestore';
 import Login from './components/Login';
 import RoomList from './components/RoomList';
 import ChatRoom from './components/ChatRoom';
@@ -18,8 +19,31 @@ function App() {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      
+      if (currentUser) {
+        // Check for room invite in URL
+        const params = new URLSearchParams(window.location.search);
+        const roomId = params.get('room');
+        
+        if (roomId) {
+          try {
+            const roomDoc = await getDoc(getRoomRef(roomId));
+            if (roomDoc.exists()) {
+              setActiveRoom({ id: roomDoc.id, ...roomDoc.data() });
+              // Clean up the URL
+              window.history.replaceState({}, document.title, window.location.pathname);
+            } else {
+              alert("The invite link is invalid or the room was deleted.");
+              window.history.replaceState({}, document.title, window.location.pathname);
+            }
+          } catch (err) {
+            console.error("Error fetching invite room:", err);
+          }
+        }
+      }
+      
       setLoading(false);
     });
 
