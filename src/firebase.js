@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, signOut } from "firebase/auth";
-import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, onSnapshot, doc, getDoc, where } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 // Replace these with your actual config from Firebase Console
@@ -30,3 +30,5 @@ export const logout = () => signOut(auth);
 // Helper for references
 export const roomsRef = collection(db, "rooms");
 export const messagesRef = (roomId) => collection(db, "rooms", roomId, "messages");
+export const getRoomRef = (roomId) => doc(db, "rooms", roomId);
+export { doc, getDoc, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp, where };

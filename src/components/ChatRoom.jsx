@@ -1,11 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { messagesRef, db } from '../firebase';
 import { addDoc, serverTimestamp, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
-import { Send, ArrowLeft } from 'lucide-react';
+import { Send, ArrowLeft, Copy, Check } from 'lucide-react';
+
+const BAD_WORDS = ['badword1', 'badword2', 'harassment', 'abuse', 'hate']; // Add actual words here later if needed
+const cleanMessage = (text) => {
+  let cleaned = text;
+  BAD_WORDS.forEach(word => {
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    cleaned = cleaned.replace(regex, '*'.repeat(word.length));
+  });
+  return cleaned;
+};
 
 export default function ChatRoom({ user, room, onBack }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [copied, setCopied] = useState(false);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -36,8 +47,11 @@ export default function ChatRoom({ user, room, onBack }) {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    const messageText = newMessage;
+    let messageText = newMessage;
     setNewMessage('');
+    
+    // Filter harassment/profanity
+    messageText = cleanMessage(messageText);
 
     try {
       await addDoc(messagesRef(room.id), {
@@ -58,6 +72,12 @@ export default function ChatRoom({ user, room, onBack }) {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(room.id);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="chat-layout glass-panel" style={{ marginTop: '5vh' }}>
       <div className="chat-header">
@@ -65,9 +85,17 @@ export default function ChatRoom({ user, room, onBack }) {
           <button className="btn-secondary" onClick={onBack} style={{ padding: '8px', border: 'none' }}>
             <ArrowLeft size={24} />
           </button>
-          <div>
-            <h2 style={{ margin: 0 }}>{room.name}</h2>
-            <span className="text-sm">Chatting as {user.displayName || 'Guest'}</span>
+          <div style={{ flex: 1 }}>
+            <div className="flex items-center gap-2">
+              <h2 style={{ margin: 0 }}>{room.name}</h2>
+              {room.isPrivate && <span style={{ fontSize: '0.65rem', background: 'rgba(239, 68, 68, 0.2)', color: 'var(--error)', padding: '2px 8px', borderRadius: '12px' }}>Private</span>}
+            </div>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-sm" style={{ opacity: 0.8 }}>Room ID: <code style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 6px', borderRadius: '4px', userSelect: 'all' }}>{room.id}</code></span>
+              <button onClick={handleCopyId} title="Copy Room ID" className="btn-icon" style={{ width: '24px', height: '24px', padding: 0 }}>
+                {copied ? <Check size={14} color="var(--primary)" /> : <Copy size={14} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
