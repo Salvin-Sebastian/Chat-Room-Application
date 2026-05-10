@@ -13,6 +13,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || "YOUR_APP_ID"
 };
 
+console.log("Firebase Config loaded! API Key starts with:", firebaseConfig.apiKey.substring(0, 5));
+
 // Initialize Firebase only if we have a config (or let it fail with a clear error so the user knows)
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
